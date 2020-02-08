@@ -65,3 +65,22 @@ if __name__ == "__main__":
     #                 'sde': sde.string
     #             }, ignore_index=True)
     # df.to_csv('iowa_caucuses.csv')
+    counties = precinct_table.find_all('div', {'class': 'precinct-rows'})
+    # generates a list of all of the discovered county objects
+    storage_list = list()
+    pack = storage_list.append
+    # make a container to store extracted data
+    # attaching append to a specific variable removes method lookup time
+    for county_obj in counties:
+        row_pref = (county_obj.find('div', {'class': 'wrap'}).string,)
+        # grabs the county name to put at the front of each row
+        for row in county_obj.find('div', {'class': 'precinct-data'}).contents:
+            # steps through each row in each county
+            if row.contents[0].string == 'Total':
+                continue
+                # skip the unneeded Total row
+                # One can do the math themselves later
+            pack(row_pref+tuple(map(grab_string, row.contents)))
+            # store the data in format (county, col1, col2, col3, ...)
+    final_frame = pd.DataFrame(storage_list, columns=headers)
+    final_frame.to_csv('caucuses_frame.csv')
