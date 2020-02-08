@@ -17,11 +17,20 @@ def extract_cols(parent, header_row):
 if __name__ == "__main__":
     data = requests.get(URL).text
     soup = BeautifulSoup(data, 'lxml')
-    header = soup.find("ul", {"class": "thead"})
-    heads = header.find_all("li")
-    subheader = soup.find("ul", {"class": "sub-head"})
-    subheads = subheader.find_all("li")
-    headers = ["county", "precinct", "candidate", "1stalign", "2ndalign", "sde"]
+    # header = soup.find("ul", {"class": "thead"})
+    # heads = header.find_all("li")
+    # subheader = soup.find("ul", {"class": "sub-head"})
+    # subheads = subheader.find_all("li")
+    # headers = ["county", "precinct", "candidate", "1stalign", "2ndalign", "sde"]
+    precinct_table = soup.find('div', {'class': 'precinct-table'})
+    source_heads = tuple(
+        zip(
+            extract_cols(precinct_table, 'thead'),
+            extract_cols(precinct_table, 'sub-head')
+        )
+    )
+    headers = list()
+
     df = pd.DataFrame(columns=headers)
     for divs in soup.find_all("div", {"class": "precinct-rows"}):
         county_nm = divs.find_all("div", {"class": "wrap"})[0]
