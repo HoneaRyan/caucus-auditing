@@ -4,6 +4,16 @@ import pandas as pd
 
 URL = "https://results.thecaucuses.org/"
 
+
+def grab_string(item):
+    return getattr(item, 'string')
+
+
+def extract_cols(parent, header_row):
+    _items = parent.find('ul', {'class': header_row}).contents
+    return tuple(map(grab_string, _items))
+
+
 if __name__ == "__main__":
     data = requests.get(URL).text
     soup = BeautifulSoup(data, 'lxml')
