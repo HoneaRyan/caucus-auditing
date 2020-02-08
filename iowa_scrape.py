@@ -23,14 +23,26 @@ if __name__ == "__main__":
     # subheads = subheader.find_all("li")
     # headers = ["county", "precinct", "candidate", "1stalign", "2ndalign", "sde"]
     precinct_table = soup.find('div', {'class': 'precinct-table'})
+    # precinct_table limits our finds to only the contents we actually want
     source_heads = tuple(
         zip(
             extract_cols(precinct_table, 'thead'),
             extract_cols(precinct_table, 'sub-head')
         )
     )
+    # source_heads gets our column names as rendered in the table
     headers = list()
-
+    prev_pref = None
+    for pref, suff in source_heads:
+        prev_pref = pref or prev_pref
+        if suff is None:
+            suff = ''
+        else:
+            suff = '.' + suff
+        headers.append(prev_pref + suff)
+    # Configures our headers to be of form
+    # [Upper Header] or [Upper Header].[Lower Header]
+    # for those columns that have sub-sections
     df = pd.DataFrame(columns=headers)
     for divs in soup.find_all("div", {"class": "precinct-rows"}):
         county_nm = divs.find_all("div", {"class": "wrap"})[0]
