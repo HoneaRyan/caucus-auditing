@@ -43,7 +43,7 @@ if __name__ == "__main__":
     # Configures our headers to be of form
     # [Upper Header] or [Upper Header].[Lower Header]
     # for those columns that have sub-sections
-    df = pd.DataFrame(columns=headers)
+    # df = pd.DataFrame(columns=headers)
     for divs in soup.find_all("div", {"class": "precinct-rows"}):
         county_nm = divs.find_all("div", {"class": "wrap"})[0]
         precincts = divs.find_all("div", {"class": "precinct-data"})
