@@ -2,8 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 
-url = "https://results.thecaucuses.org/"
-data = requests.get(url).text
+URL = "https://results.thecaucuses.org/"
+data = requests.get(URL).text
 soup = BeautifulSoup(data,'lxml')
 header=soup.find("ul",{"class":"thead"})
 heads = header.find_all("li")
@@ -31,4 +31,4 @@ for divs in soup.find_all("div", {"class": "precinct-rows"}):
                     '2ndalign':align_2.string,
                     'sde':sde.string
                 }, ignore_index=True)
-df.to_csv('iowa_caucuses.csv').
+df.to_csv('iowa_caucuses.csv')
